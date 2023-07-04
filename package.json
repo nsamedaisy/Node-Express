@@ -1,0 +1,17 @@
+{
+  "name": "learn-node-with-express",
+  "version": "0.1.0",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.14.0",
+    "mongoose": "^7.0.0",
+    "nodemon": "^2.0.22"
+  },
+  "main": "myApp.js",
+  "scripts": {
+    "start": "nodemon myApp.js",
+    "start-mon": "nodemon myApp.js"
+  }
+}
