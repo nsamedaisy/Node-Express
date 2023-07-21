@@ -7,7 +7,9 @@
     "dotenv": "^16.0.3",
     "express": "^4.14.0",
     "mongoose": "^7.0.0",
-    "nodemon": "^2.0.22"
+    "mysql2": "^3.5.2",
+    "nodemon": "^2.0.22",
+    "sequelize": "^6.32.1"
   },
   "main": "myApp.js",
   "scripts": {
