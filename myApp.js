@@ -6,9 +6,70 @@ const bodyParser = require("body-parser");
 const Student = require("./models/student");
 const Cohort = require("./models/cohort");
 
+// relating two tables together
+Student.belongsTo(Cohort);
+
 let app = express();
 
 // callbacks
+const getStudents = async (req, res) => {
+  await Student.findAll()
+    .then((resp) => {
+      console.log(resp);
+      return res.json(resp);
+    })
+    .catch((error) => {
+      console.error("A error occured:", error);
+      return res.send("an error occured:").status(500);
+    });
+};
+
+const getStudent = async (req, res) => {
+  await Student.findAll({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((resp) => {
+      console.log("student:", resp);
+      return res.json(resp);
+    })
+    .catch((error) => {
+      console.log("An error occured:", error);
+      return res.send("An error occured:").status(404);
+    });
+};
+
+const delStudent = async (req, res) => {
+  await Student.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then(() => {
+      console.log(
+        "Student with id " + req.params.id + "has been successfully deleted"
+      );
+      res.send("ok");
+    })
+    .catch((error) => {
+      console.log("An error occured:", error);
+      return res.send("An error occured:").status(404);
+    });
+};
+
+const createStudent = async (req, res) => {
+  await Student.create();
+};
+
+const updateStudent = (req, res) => {};
+
+app.get("/students", getStudents);
+app.get("/students/:id", getStudent);
+app.get("/students/:id", delStudent);
+app.get("/students", createStudent);
+app.post("/students/:id", updateStudent);
+
 let rootCallback = (req, res) => {
   res.json({ hello: "Welcome to Express" });
 };
