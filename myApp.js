@@ -5,95 +5,25 @@ const bodyParser = require("body-parser");
 
 const Student = require("./models/student");
 const Cohort = require("./models/cohort");
+const {
+  getCohort,
+  getCohorts,
+  delCohort,
+  createCohort,
+  updateCohort,
+} = require("./controllers/cohort");
 
-// relating two tables together
-Student.belongsTo(Cohort);
+const {
+  getStudent,
+  getStudents,
+  delStudent,
+  createStudent,
+  updateStudent,
+} = require("./controllers/student");
 
 let app = express();
 
 // callbacks
-// students callbacks
-const getStudents = async (req, res) => {
-  await Student.findAll()
-    .then((resp) => {
-      console.log(resp);
-      return res.json(resp);
-    })
-    .catch((error) => {
-      console.error("A error occured:", error);
-      return res.send("an error occured:").status(500);
-    });
-};
-
-const getStudent = async (req, res) => {
-  await Student.findAll({
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then((resp) => {
-      console.log("student:", resp);
-      return res.json(resp);
-    })
-    .catch((error) => {
-      console.log("An error occured:", error);
-      return res.send("An error occured:").status(404);
-    });
-};
-
-const delStudent = async (req, res) => {
-  await Student.destroy({
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then(() => {
-      console.log(
-        "Student with id " + req.params.id + "has been successfully deleted"
-      );
-      res.send("ok");
-    })
-    .catch((error) => {
-      console.log("An error occured:", error);
-      return res.send("An error occured:").status(404);
-    });
-};
-
-const createStudent = async (req, res) => {
-  let student = req.body.student;
-  Student.create(student)
-    .then(() => {
-      res.send("ok");
-    })
-    .catch((error) => {
-      console.log("An error occured", error);
-      res.send("An error occured").status(400);
-    });
-};
-
-const updateStudent = async (req, res) => {
-  let student = req.body.student;
-  await Student.update(student, { where: { id: req.params.id } })
-    .then((resp) => {
-      console.log("Student:", resp);
-      return res.json(resp);
-    })
-    .catch((error) => {
-      console.error("An error occured", error);
-      return res.send("An error occured").status(404);
-    });
-};
-
-// cohort callbacks
-const getCohorts = async (req, res) => {};
-
-const getCohort = async (req, res) => {};
-
-const delCohort = async (req, res) => {};
-
-const createCohort = async (req, res) => {};
-
-const updateCohort = async (req, res) => {};
 
 let rootCallback = (req, res) => {
   res.json({ hello: "Welcome to Express" });
@@ -204,4 +134,4 @@ app.get("/query", getQueries);
 app.post("/create-person", createPerson);
 
 //listen on a particular port
-app.listen(8000);
+app.listen(3001);

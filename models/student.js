@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequel = require("../db");
+const Cohort = require("../models/cohort");
 
 // Define Student Model and identification Model
 const Student = sequel.define("student", {
@@ -15,7 +16,7 @@ const Student = sequel.define("student", {
   level: {
     type: DataTypes.ENUM("1st", "2nd"),
   },
-  cohort_id: {
+  cohortId: {
     type: DataTypes.UUID,
   },
   dob: {
@@ -44,8 +45,11 @@ const Student = sequel.define("student", {
   },
   score: {
     type: DataTypes.INTEGER,
-  }
+  },
 });
+
+// creating association using sequelize
+Student.belongsTo(Cohort);
 
 sequel
   .sync()
