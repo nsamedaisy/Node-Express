@@ -12,6 +12,7 @@ Student.belongsTo(Cohort);
 let app = express();
 
 // callbacks
+// students callbacks
 const getStudents = async (req, res) => {
   await Student.findAll()
     .then((resp) => {
@@ -59,16 +60,40 @@ const delStudent = async (req, res) => {
 };
 
 const createStudent = async (req, res) => {
-  await Student.create();
+  let student = req.body.student;
+  Student.create(student)
+    .then(() => {
+      res.send("ok");
+    })
+    .catch((error) => {
+      console.log("An error occured", error);
+      res.send("An error occured").status(400);
+    });
 };
 
-const updateStudent = (req, res) => {};
+const updateStudent = async (req, res) => {
+  let student = req.body.student;
+  await Student.update(student, { where: { id: req.params.id } })
+    .then((resp) => {
+      console.log("Student:", resp);
+      return res.json(resp);
+    })
+    .catch((error) => {
+      console.error("An error occured", error);
+      return res.send("An error occured").status(404);
+    });
+};
 
-app.get("/students", getStudents);
-app.get("/students/:id", getStudent);
-app.get("/students/:id", delStudent);
-app.get("/students", createStudent);
-app.post("/students/:id", updateStudent);
+// cohort callbacks
+const getCohorts = async (req, res) => {};
+
+const getCohort = async (req, res) => {};
+
+const delCohort = async (req, res) => {};
+
+const createCohort = async (req, res) => {};
+
+const updateCohort = async (req, res) => {};
 
 let rootCallback = (req, res) => {
   res.json({ hello: "Welcome to Express" });
@@ -148,6 +173,20 @@ app.use(bodyParser.json());
 
 //routes
 // app.METHOD(PATH, HANDLER)
+// Student routes
+app.get("/students", getStudents);
+app.get("/students/:id", getStudent);
+app.delete("/students/:id", delStudent);
+app.post("/students", createStudent);
+app.post("/students/:id", updateStudent);
+
+// cohort routes
+app.get("/cohorts", getCohorts);
+app.get("/cohorts/:id", getCohort);
+app.delete("/cohorts/:id", delCohort);
+app.post("/cohorts", createCohort);
+app.post("cohorts/:id", updateCohort);
+
 app.get("/", rootCallback);
 app.post("/", postRootCallback);
 app.get("/index.html", serveIndex);
