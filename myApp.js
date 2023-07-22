@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 
 const Student = require("./models/student");
 const Cohort = require("./models/cohort");
+const Book = require("./models/book");
 const {
   getCohort,
   getCohorts,
@@ -20,6 +21,14 @@ const {
   createStudent,
   updateStudent,
 } = require("./controllers/student");
+
+const {
+  getBooks,
+  getBooksById,
+  deleteBooks,
+  createBooks,
+  updateBooks,
+} = require("./controllers/book");
 
 let app = express();
 
@@ -116,6 +125,13 @@ app.get("/cohorts/:id", getCohort);
 app.delete("/cohorts/:id", delCohort);
 app.post("/cohorts", createCohort);
 app.post("cohorts/:id", updateCohort);
+
+//Books routes
+app.get("/Books", getBooks);
+app.get("/Books/:id", getBooksById);
+app.get("/Books/delete/:id", deleteBooks);
+app.post("/Books/create", createBooks);
+app.post("/Books/update", updateBooks);
 
 app.get("/", rootCallback);
 app.post("/", postRootCallback);
