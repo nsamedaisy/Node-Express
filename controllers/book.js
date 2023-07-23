@@ -1,4 +1,6 @@
-const Book = require("../models/book");
+const Books = require("../models/book");
+const Cohort = require("../models/cohort");
+
 
 //books callbacks
 let getBooks = (req, res) => {
