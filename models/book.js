@@ -11,7 +11,7 @@ const Books = sequel.define("book", {
     allowNull: false,
   },
   category: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
   },
   price: {
     type: DataTypes.INTEGER,

@@ -1,46 +1,71 @@
 const Books = require("../models/book");
-const Cohort = require("../models/cohort");
-
 
 //books callbacks
-let getBooks = (req, res) => {
-  res.json(Books);
-};
-
-let getBooksById = (req, res) => {
-  let { id } = req.params;
-  let BookId = Books.filter((Book) => {
-    return Book.id == id;
+let getBooks = async(req, res) => {
+  await Books.findAll()
+  .then((resp) => {
+    console.log(resp);
+    return res.json(resp);
+  })
+  .catch((error) => {
+    console.error("An error occured:", error);
+    return res.send("An error occured").status(500);
   });
-  res.json(BookId);
 };
 
-let deleteBooks = (req, res) => {
-  let { id } = req.params;
-  let Book = Books.filter((Book) => {
-    return Book.id != id;
-  });
-  res.json(Book);
+let getBooksById = async (req, res) => {
+ await Books.findAll({
+  where: {
+    id: req.params.id
+  }
+ }).then(() => {
+  console.log("Books with id " + req.params.id + "has been successfully selected")
+  res.send("One book selected")
+ }).catch((error) => {
+  console.log("An error was dictated", error)
+  return res.send("An error was dictated").status(404)
+ })
 };
 
-let createBooks = (req, res) => {
-  let newBook = {
-    id: Date.parse(new Date()),
-    ...req.body,
-  };
-  Books.push(newBook);
-  res.json(Books);
+let deleteBooks = async (req, res) => {
+  await Books.destroy({
+    where: { id: req.params.id },
+  })
+    .then(() => {
+      console.log(
+        "Books with id " + req.params.id + "has been succesfully deleted"
+      );
+      res.send("Deleted one Book!");
+    })
+    .catch((error) => {
+      console.log("An error occured", error);
+      return res.send("An error occured").status(404);
+    });
 };
 
-let updateBooks = (req, res) => {
-  requestId = 1;
-  let Book = Books.find((Book) => Book.id == requestId);
-  Book.title = req.body.title;
-  Book.author = req.body.author;
-  Book.date = req.body.date;
+let createBooks = async (req, res) => {
+  let book = req.body.book;
+  Books.create(book)
+    .then(() => {
+      res.send("Book created");
+    })
+    .catch((error) => {
+      console.log("error occured", error);
+      return res.send("unable to create");
+    });
+};
 
-  Book = Books.filter((Book) => {});
-  res.json(Books);
+let updateBooks = async (req, res) => {
+  let book = req.body.book;
+  await Books.update(book, { where: { id: req.params.id } })
+    .then((resp) => {
+      console.log("Book  Updated", resp);
+      return res.json(resp);
+    })
+    .catch((error) => {
+      console.log("An error occured", error);
+      return res.send("An error occured").status(404);
+    });
 };
 
 module.exports = {
