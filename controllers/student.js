@@ -2,9 +2,38 @@ const Student = require("../models/student");
 // const Cohort = require("../models/cohort");
 const Book = require("../models/book");
 const Course = require("../models/course");
+const { Op, Sequelize } = require("sequelize");
 
 const getStudents = async (req, res) => {
-  await Student.findAll()
+  let page = req.query.page ? req.query.page : 0;
+  let limit = req.query.limit ? req.query.limit : 5;
+  await Student.findAll({
+    // utility functions i can use to models e.g min, max,decrement, increment
+    //virtual fields on sequelize
+    group: "score",
+    order: [
+      ["score", "DESC"],
+      Sequelize.fn("MAX", Sequelize.col("score")) //sorting by maximum score in descending order. note its ascending by default
+    ],
+    limit, //gives the limit of database data like at 10 it continues to the next page(Partitions)
+    offset: page * limit, //offset denotes
+
+    // attributes: ["name", "email", "phone", "level", "sex"], // with attributes you include or excludes the data u want or that which u dont want
+
+    // where: {
+    //   [Op.and]: [
+    //     //it specifies that the query should return only records where the "id" column matches the value of "req.params.id" AND the "sex" column is "female". (array of options to select from)
+    //     { id: req.params.id },
+    //     { sex: "female" },
+    //   ],
+    // },
+    // include: {
+    //   model: Book,
+    // },
+    // include: {
+    //   model: Course,
+    // },
+  })
     .then((resp) => {
       console.log(resp);
       return res.json(resp);
@@ -16,24 +45,9 @@ const getStudents = async (req, res) => {
 };
 
 const getStudent = async (req, res) => {
-  await Student.findAll({
-    // with attributes you include or excludes the data u want or that which u dont want
-    attributes: [ "name", "email", "phone", "level", "sex"],
-    // or
-    // attributes: {
-    //   exclude: ["country", "dob", "address", "town", "region"],
-    // },
+  await Student.findOne({
     where: {
-      [Op.and]: [  //it specifies that the query should return only records where the "id" column matches the value of "req.params.id" AND the "sex" column is "female". 
-        {id: req.params.id},
-        {sex: "female"}
-      ]
-    },
-    // include: {
-    //   model: Book,
-    // },
-    include: {
-      model: Course,
+      id: req.params.id,
     },
   })
     .then((resp) => {
