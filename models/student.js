@@ -1,6 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequel = require("../db");
 const Cohort = require("../models/cohort");
+const Book = require("../models/book");
+const Course = require("../models/course");
 
 // Define Student Model and identification Model
 const Student = sequel.define("student", {
@@ -50,6 +52,22 @@ const Student = sequel.define("student", {
 
 // creating association using sequelize
 Student.belongsTo(Cohort);
+Cohort.hasMany(Student);
+
+// creating a many to many relationship
+// the StudentBooks manages the relationship between student and book
+const StudentBooks = sequel.define("student_books", {}, { timestamps: false });
+Student.belongsToMany(Book, { through: StudentBooks });
+Book.belongsToMany(Student, { through: StudentBooks });
+
+// relationship between students and the courses
+const StudentCourses = sequel.define(
+  "student_courses",
+  {},
+  { timestamps: false }
+);
+Student.belongsToMany(Course, { through: StudentCourses });
+Course.belongsToMany(Student, { through: StudentCourses });
 
 sequel
   .sync()

@@ -1,4 +1,5 @@
 const Cohort = require("../models/cohort");
+const Student = require("../models/student");
 
 // cohort callbacks
 const getCohorts = async (req, res) => {
@@ -17,6 +18,9 @@ const getCohort = async (req, res) => {
   await Cohort.findAll({
     where: {
       id: req.params.id,
+    },
+    include: {
+      model: Student,
     },
   })
     .then((resp) => {

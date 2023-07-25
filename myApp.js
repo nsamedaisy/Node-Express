@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const Student = require("./models/student");
 const Cohort = require("./models/cohort");
 const Book = require("./models/book");
+const Course = require("./models/course");
 const {
   getCohort,
   getCohorts,
@@ -23,12 +24,20 @@ const {
 } = require("./controllers/student");
 
 const {
-  getBooks,
-  getBooksById,
-  deleteBooks,
-  createBooks,
-  updateBooks,
+  getBook,
+  getBookById,
+  deleteBook,
+  createBook,
+  updateBook,
 } = require("./controllers/book");
+
+const {
+  getCourses,
+  getCourse,
+  deleteCourse,
+  createCourse,
+  updateCourse,
+} = require("./controllers/course");
 
 let app = express();
 
@@ -127,11 +136,18 @@ app.post("/cohorts", createCohort);
 app.post("cohorts/:id", updateCohort);
 
 //Books routes
-app.get("/Books", getBooks);
-app.get("/Books/:id", getBooksById);
-app.get("/Books/delete/:id", deleteBooks);
-app.post("/Books/create", createBooks);
-app.post("/Books/update", updateBooks);
+app.get("/Books", getBook);
+app.get("/Books/:id", getBookById);
+app.get("/Books/delete/:id", deleteBook);
+app.post("/Books/create", createBook);
+app.post("/Books/update", updateBook);
+
+// Course routes
+app.get("/courses", getCourses);
+app.get("/courses/:id", getCourse);
+app.get("/courses/delete/:id", deleteCourse);
+app.post("/courses", createCourse);
+app.post("/courses", updateCourse);
 
 app.get("/", rootCallback);
 app.post("/", postRootCallback);

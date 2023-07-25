@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequel = require("../db");
 
-const Books = sequel.define("book", {
+const Book = sequel.define("book", {
   title: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -23,6 +23,7 @@ const Books = sequel.define("book", {
   },
 });
 
+
 sequel
   .sync()
   .then(() => {
@@ -32,4 +33,4 @@ sequel
     console.error("Unable to create table : ", error);
   });
 
-module.exports = Books;
+module.exports = Book;

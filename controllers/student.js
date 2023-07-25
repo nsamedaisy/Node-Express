@@ -1,5 +1,7 @@
 const Student = require("../models/student");
-const Cohort = require("../models/cohort");
+// const Cohort = require("../models/cohort");
+const Book = require("../models/book");
+const Course = require("../models/course");
 
 const getStudents = async (req, res) => {
   await Student.findAll()
@@ -15,11 +17,23 @@ const getStudents = async (req, res) => {
 
 const getStudent = async (req, res) => {
   await Student.findAll({
+    // with attributes you include or excludes the data u want or that which u dont want
+    attributes: [ "name", "email", "phone", "level", "sex"],
+    // or
+    // attributes: {
+    //   exclude: ["country", "dob", "address", "town", "region"],
+    // },
     where: {
-      id: req.params.id,
+      [Op.and]: [  //it specifies that the query should return only records where the "id" column matches the value of "req.params.id" AND the "sex" column is "female". 
+        {id: req.params.id},
+        {sex: "female"}
+      ]
     },
+    // include: {
+    //   model: Book,
+    // },
     include: {
-      model: Cohort,
+      model: Course,
     },
   })
     .then((resp) => {
@@ -52,12 +66,16 @@ const delStudent = async (req, res) => {
 
 const createStudent = async (req, res) => {
   let student = req.body.student;
-  Student.create(student)
+  Student.create(student, {
+    include: {
+      model: Course,
+    },
+  })
     .then(() => {
       res.send("Successfully added a new student!");
     })
     .catch((error) => {
-      console.log("'Failed to synchronize with the database:", error);
+      console.log("Failed to synchronize with the database:", error);
       res.send("An error occured").status(400);
     });
 };
